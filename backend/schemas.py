@@ -1,7 +1,8 @@
 """Pydantic schemas for request/response validation."""
 from datetime import datetime, date
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator, ConfigDict
+import re
 
 
 # Employee Schemas
@@ -9,8 +10,17 @@ class EmployeeBase(BaseModel):
     """Base employee schema."""
     employee_id: str
     full_name: str
-    email: EmailStr
+    email: str = Field(..., pattern=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
     department: str
+
+    @field_validator('email')
+    @classmethod
+    def validate_email(cls, v: str) -> str:
+        """Validate email format."""
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, v):
+            raise ValueError('Invalid email format')
+        return v.lower()
 
 
 class EmployeeCreate(EmployeeBase):
