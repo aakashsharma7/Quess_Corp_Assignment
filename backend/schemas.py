@@ -1,7 +1,7 @@
 """Pydantic schemas for request/response validation."""
 from datetime import datetime, date
 from typing import Optional
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, validator
 import re
 
 
@@ -10,12 +10,11 @@ class EmployeeBase(BaseModel):
     """Base employee schema."""
     employee_id: str
     full_name: str
-    email: str = Field(..., pattern=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+    email: str
     department: str
 
-    @field_validator('email')
-    @classmethod
-    def validate_email(cls, v: str) -> str:
+    @validator('email')
+    def validate_email(cls, v):
         """Validate email format."""
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_pattern, v):
@@ -33,7 +32,8 @@ class EmployeeResponse(EmployeeBase):
     id: str
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 # Attendance Schemas
@@ -43,9 +43,8 @@ class AttendanceBase(BaseModel):
     date: date
     status: str
 
-    @field_validator('status')
-    @classmethod
-    def validate_status(cls, v: str) -> str:
+    @validator('status')
+    def validate_status(cls, v):
         """Validate attendance status."""
         if v not in ['Present', 'Absent']:
             raise ValueError('Status must be either Present or Absent')
@@ -55,9 +54,8 @@ class AttendanceBase(BaseModel):
 class AttendanceCreate(AttendanceBase):
     """Schema for creating attendance record."""
     
-    @field_validator('date')
-    @classmethod
-    def validate_date(cls, v: date) -> date:
+    @validator('date')
+    def validate_date(cls, v):
         """Validate that date is not in the future."""
         if v > date.today():
             raise ValueError('Attendance date cannot be in the future')
@@ -74,7 +72,8 @@ class AttendanceResponse(BaseModel):
     employee_name: Optional[str] = None
     employee_department: Optional[str] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
 
 
 # Error Response Schema
