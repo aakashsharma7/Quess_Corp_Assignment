@@ -1,7 +1,7 @@
 """Pydantic schemas for request/response validation."""
 from datetime import datetime, date
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
 
 
 # Employee Schemas
@@ -23,8 +23,7 @@ class EmployeeResponse(EmployeeBase):
     id: str
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Attendance Schemas
@@ -34,8 +33,9 @@ class AttendanceBase(BaseModel):
     date: date
     status: str
 
-    @validator('status')
-    def validate_status(cls, v):
+    @field_validator('status')
+    @classmethod
+    def validate_status(cls, v: str) -> str:
         """Validate attendance status."""
         if v not in ['Present', 'Absent']:
             raise ValueError('Status must be either Present or Absent')
@@ -45,8 +45,9 @@ class AttendanceBase(BaseModel):
 class AttendanceCreate(AttendanceBase):
     """Schema for creating attendance record."""
     
-    @validator('date')
-    def validate_date(cls, v):
+    @field_validator('date')
+    @classmethod
+    def validate_date(cls, v: date) -> date:
         """Validate that date is not in the future."""
         if v > date.today():
             raise ValueError('Attendance date cannot be in the future')
@@ -63,8 +64,7 @@ class AttendanceResponse(BaseModel):
     employee_name: Optional[str] = None
     employee_department: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Error Response Schema
