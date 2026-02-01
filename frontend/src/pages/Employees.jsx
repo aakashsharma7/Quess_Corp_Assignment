@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Container from '../components/Layout/Container';
 import EmployeeForm from '../components/Employees/EmployeeForm';
@@ -12,16 +12,27 @@ const Employees = () => {
     const [headerRef, headerInView] = useInView({ threshold: 0.2, once: true });
     const [formRef, formInView] = useInView({ threshold: 0.1, once: true });
     const [listRef, listInView] = useInView({ threshold: 0.1, once: true });
+    const employeeListRef = useRef(null);
 
     useEffect(() => {
         fetchEmployees();
     }, []);
 
-    const fetchEmployees = async () => {
+    const fetchEmployees = async (scrollToList = false) => {
         setLoading(true);
         try {
             const data = await employeeAPI.getAll();
             setEmployees(data);
+
+            // Scroll to list if requested
+            if (scrollToList && employeeListRef.current) {
+                setTimeout(() => {
+                    employeeListRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
         } catch (error) {
             console.error('Error fetching employees:', error);
         } finally {
@@ -46,33 +57,16 @@ const Employees = () => {
                         animate={headerInView ? { scale: 1 } : {}}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        <span className="text-6xl">👥</span>
+                        {/* <span className="text-6xl">👥</span> */}
                     </motion.div>
 
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#f093fb] bg-clip-text text-transparent">
                         Employee Management
                     </h1>
 
-                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                    {/* <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                         Manage your organization's employee records efficiently with our intuitive interface
-                    </p>
-
-                    {/* Stats Bar */}
-                    <motion.div
-                        className="mt-8 flex flex-wrap justify-center gap-6"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                    >
-                        <div className="px-6 py-3 bg-gradient-to-r from-[#667eea]/20 to-[#764ba2]/20 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">{employees.length}</div>
-                            <div className="text-sm text-gray-400">Total Employees</div>
-                        </div>
-                        <div className="px-6 py-3 bg-gradient-to-r from-[#43e97b]/20 to-[#38f9d7]/20 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">Active</div>
-                            <div className="text-sm text-gray-400">Status</div>
-                        </div>
-                    </motion.div>
+                    </p> */}
                 </motion.div>
 
                 {/* Employee Form Section */}
@@ -83,7 +77,7 @@ const Employees = () => {
                     animate={formInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    <EmployeeForm onEmployeeAdded={fetchEmployees} />
+                    <EmployeeForm onEmployeeAdded={() => fetchEmployees(true)} />
                 </motion.div>
 
                 {/* Employee List Section */}
@@ -93,11 +87,13 @@ const Employees = () => {
                     animate={listInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                    <EmployeeList
-                        employees={employees}
-                        loading={loading}
-                        onEmployeeDeleted={fetchEmployees}
-                    />
+                    <div ref={employeeListRef}>
+                        <EmployeeList
+                            employees={employees}
+                            loading={loading}
+                            onEmployeeDeleted={fetchEmployees}
+                        />
+                    </div>
                 </motion.div>
             </Container>
         </div>

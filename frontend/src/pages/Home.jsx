@@ -1,14 +1,49 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Container from '../components/Layout/Container';
 import Card from '../components/UI/Card';
 import { useInView } from '../hooks/useInView';
+import { employeeAPI } from '../api/employees';
+import { attendanceAPI } from '../api/attendance';
 
 const Home = () => {
     const [hoveredCard, setHoveredCard] = useState(null);
     const [heroRef, heroInView] = useInView({ threshold: 0.2, once: true });
     const [featuresRef, featuresInView] = useInView({ threshold: 0.1, once: true });
+
+    // State for stats
+    const [employees, setEmployees] = useState([]);
+    const [attendanceRecords, setAttendanceRecords] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch data on mount
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [employeesData, attendanceData] = await Promise.all([
+                    employeeAPI.getAll(),
+                    attendanceAPI.getAll()
+                ]);
+                setEmployees(employeesData);
+                setAttendanceRecords(attendanceData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Calculate attendance stats for today
+    const todayRecords = attendanceRecords.filter(r => {
+        const recordDate = new Date(r.date).toDateString();
+        const today = new Date().toDateString();
+        return recordDate === today;
+    });
+    const presentToday = todayRecords.filter(r => r.status === 'Present').length;
+    const absentToday = todayRecords.filter(r => r.status === 'Absent').length;
 
     const features = [
         {
@@ -18,6 +53,10 @@ const Home = () => {
             link: '/employees',
             gradient: 'from-gray-600 to-gray-700',
             badge: 'Core Feature',
+            stats: [
+                { label: 'Total Employees', value: employees.length, gradient: 'from-[#667eea]/20 to-[#764ba2]/20' },
+                { label: 'Status', value: 'Active', gradient: 'from-[#43e97b]/20 to-[#38f9d7]/20' }
+            ]
         },
         {
             icon: '📅',
@@ -26,6 +65,10 @@ const Home = () => {
             link: '/attendance',
             gradient: 'from-gray-500 to-gray-600',
             badge: 'Essential',
+            stats: [
+                { label: 'Present Today', value: presentToday, gradient: 'from-[#43e97b]/20 to-[#38f9d7]/20' },
+                { label: 'Absent Today', value: absentToday, gradient: 'from-[#fa709a]/20 to-[#fee140]/20' }
+            ]
         },
     ];
 
@@ -119,6 +162,27 @@ const Home = () => {
                                         <p className="text-gray-400 mb-6 leading-relaxed">
                                             {feature.description}
                                         </p>
+
+                                        {/* Stats Display */}
+                                        {feature.stats && (
+                                            <div className="flex gap-3 mb-6">
+                                                {feature.stats.map((stat, statIndex) => (
+                                                    <motion.div
+                                                        key={stat.label}
+                                                        className={`flex-1 px-4 py-3 bg-gradient-to-r ${stat.gradient} rounded-lg border border-white/10 backdrop-blur-sm`}
+                                                        initial={{ opacity: 0, scale: 0.8 }}
+                                                        animate={featuresInView ? { opacity: 1, scale: 1 } : {}}
+                                                        transition={{ duration: 0.4, delay: 1 + index * 0.2 + statIndex * 0.1 }}
+                                                        whileHover={{ scale: 1.05 }}
+                                                    >
+                                                        <div className="text-xl font-bold text-white">
+                                                            {loading ? '...' : stat.value}
+                                                        </div>
+                                                        <div className="text-xs text-gray-300">{stat.label}</div>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        )}
 
                                         {/* Animated Arrow */}
                                         <div className="flex items-center text-primary font-semibold">

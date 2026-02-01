@@ -24,9 +24,9 @@ const Header = () => {
                             {/* <motion.img
                                 src="/logo.png"
                                 alt="HRMS Lite Logo"
-                                className="h-10 w-10"
-                            // whileHover={{ scale: 0, rotate: 5 }}
-                            // transition={{ duration: 0.2 }}
+                                className="h-10 w-10 object-contain"
+                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                transition={{ duration: 0.2 }}
                             /> */}
                             <h1 className="text-2xl font-bold text-foreground">
                                 QUESS CORP HRMS Lite

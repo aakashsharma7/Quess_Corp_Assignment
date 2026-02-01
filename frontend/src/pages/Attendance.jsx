@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Container from '../components/Layout/Container';
 import AttendanceForm from '../components/Attendance/AttendanceForm';
@@ -12,16 +12,27 @@ const Attendance = () => {
     const [headerRef, headerInView] = useInView({ threshold: 0.2, once: true });
     const [formRef, formInView] = useInView({ threshold: 0.1, once: true });
     const [recordsRef, recordsInView] = useInView({ threshold: 0.1, once: true });
+    const attendanceListRef = useRef(null);
 
     useEffect(() => {
         fetchAttendance();
     }, []);
 
-    const fetchAttendance = async () => {
+    const fetchAttendance = async (scrollToList = false) => {
         setLoading(true);
         try {
             const data = await attendanceAPI.getAll();
             setRecords(data);
+
+            // Scroll to list if requested
+            if (scrollToList && attendanceListRef.current) {
+                setTimeout(() => {
+                    attendanceListRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
         } catch (error) {
             console.error('Error fetching attendance:', error);
         } finally {
@@ -55,37 +66,16 @@ const Attendance = () => {
                         animate={headerInView ? { scale: 1 } : {}}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        <span className="text-6xl">📅</span>
+                        {/* <span className="text-6xl">📅</span> */}
                     </motion.div>
 
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#4facfe] via-[#00f2fe] to-[#43e97b] bg-clip-text text-transparent">
                         Attendance Management
                     </h1>
 
-                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                    {/* <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                         Track and manage employee attendance records with real-time insights
-                    </p>
-
-                    {/* Stats Bar */}
-                    <motion.div
-                        className="mt-8 flex flex-wrap justify-center gap-6"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                    >
-                        <div className="px-6 py-3 bg-gradient-to-r from-[#4facfe]/20 to-[#00f2fe]/20 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">{records.length}</div>
-                            <div className="text-sm text-gray-400">Total Records</div>
-                        </div>
-                        <div className="px-6 py-3 bg-gradient-to-r from-[#43e97b]/20 to-[#38f9d7]/20 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">{presentToday}</div>
-                            <div className="text-sm text-gray-400">Present Today</div>
-                        </div>
-                        <div className="px-6 py-3 bg-gradient-to-r from-[#fa709a]/20 to-[#fee140]/20 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">{absentToday}</div>
-                            <div className="text-sm text-gray-400">Absent Today</div>
-                        </div>
-                    </motion.div>
+                    </p> */}
                 </motion.div>
 
                 {/* Attendance Form Section */}
@@ -96,7 +86,7 @@ const Attendance = () => {
                     animate={formInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    <AttendanceForm onAttendanceMarked={fetchAttendance} />
+                    <AttendanceForm onAttendanceMarked={() => fetchAttendance(true)} />
                 </motion.div>
 
                 {/* Attendance Records Section */}
@@ -106,7 +96,9 @@ const Attendance = () => {
                     animate={recordsInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                    <AttendanceRecords records={records} loading={loading} />
+                    <div ref={attendanceListRef}>
+                        <AttendanceRecords records={records} loading={loading} />
+                    </div>
                 </motion.div>
             </Container>
         </div>
