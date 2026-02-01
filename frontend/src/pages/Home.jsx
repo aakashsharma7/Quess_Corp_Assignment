@@ -91,14 +91,14 @@ const Home = () => {
                     >
                         Welcome to HRMS Lite
                     </motion.h1>
-                    <motion.p
+                    {/* <motion.p
                         className="text-xl text-gray-400 max-w-3xl mx-auto"
                         initial={{ opacity: 0 }}
                         animate={heroInView ? { opacity: 1 } : {}}
                         transition={{ duration: 0.5, delay: 0.4 }}
                     >
                         A modern, lightweight Human Resource Management System for efficient employee and attendance management
-                    </motion.p>
+                    </motion.p> */}
                 </motion.div>
 
                 {/* Feature Cards with Badges */}

@@ -28,7 +28,7 @@ const Header = () => {
                                 whileHover={{ scale: 1.1, rotate: 5 }}
                                 transition={{ duration: 0.2 }}
                             /> */}
-                            <h1 className="text-2xl font-bold text-foreground">
+                            <h1 className="text-2xl font-bold text-foreground text-center">
                                 QUESS CORP HRMS Lite
                             </h1>
                         </motion.div>
