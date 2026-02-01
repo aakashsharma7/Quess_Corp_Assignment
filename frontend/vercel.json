@@ -1,0 +1,8 @@
+{
+  "env": {
+    "VITE_API_URL": "https://quess-corp-assesment.onrender.com"
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
