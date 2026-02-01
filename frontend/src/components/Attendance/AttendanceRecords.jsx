@@ -105,10 +105,6 @@ const AttendanceRecords = ({ records, loading }) => {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: 20 }}
                                         transition={{ duration: 0.3, delay: index * 0.03 }}
-                                        whileHover={{
-                                            backgroundColor: 'rgba(102, 126, 234, 0.08)',
-                                            scale: 1.01,
-                                        }}
                                     >
                                         <td>
                                             <motion.span

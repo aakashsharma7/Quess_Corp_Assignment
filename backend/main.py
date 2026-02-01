@@ -29,6 +29,7 @@ allowed_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "https://quess-corp-assesment.vercel.app",  # Production frontend
+    "*"  # Temporarily allow all for testing (remove in production)
 ]
 
 app.add_middleware(
@@ -107,10 +108,12 @@ app.include_router(attendance.router)
 
 if __name__ == "__main__":
     import uvicorn
+    # Railway automatically provides PORT environment variable
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,  # Use Railway's PORT
+        reload=False,  # Disable reload in production
         log_level="info"
     )

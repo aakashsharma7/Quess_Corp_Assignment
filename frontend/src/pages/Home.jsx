@@ -2,13 +2,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Container from '../components/Layout/Container';
-import Card from '../components/UI/Card';
 import { useInView } from '../hooks/useInView';
 import { employeeAPI } from '../api/employees';
 import { attendanceAPI } from '../api/attendance';
 
 const Home = () => {
-    const [hoveredCard, setHoveredCard] = useState(null);
     const [heroRef, heroInView] = useInView({ threshold: 0.2, once: true });
     const [featuresRef, featuresInView] = useInView({ threshold: 0.1, once: true });
 
@@ -47,165 +45,122 @@ const Home = () => {
 
     const features = [
         {
-            icon: '👥',
+            // icon: '👥',
             title: 'Employee Management',
-            description: 'Add, view, and manage employee records with ease',
+            description: 'Efficiently manage your workforce with comprehensive employee records and profiles',
             link: '/employees',
-            gradient: 'from-gray-600 to-gray-700',
-            badge: 'Core Feature',
             stats: [
-                { label: 'Total Employees', value: employees.length, gradient: 'from-[#667eea]/20 to-[#764ba2]/20' },
-                { label: 'Status', value: 'Active', gradient: 'from-[#43e97b]/20 to-[#38f9d7]/20' }
+                { label: 'Total Employees', value: employees.length },
+                { label: 'Active', value: employees.length }
             ]
         },
         {
-            icon: '📅',
+            // icon: '�',
             title: 'Attendance Tracking',
-            description: 'Mark and track daily attendance for all employees',
+            description: 'Monitor and track employee attendance with real-time insights and analytics',
             link: '/attendance',
-            gradient: 'from-gray-500 to-gray-600',
-            badge: 'Essential',
             stats: [
-                { label: 'Present Today', value: presentToday, gradient: 'from-[#43e97b]/20 to-[#38f9d7]/20' },
-                { label: 'Absent Today', value: absentToday, gradient: 'from-[#fa709a]/20 to-[#fee140]/20' }
+                { label: 'Present Today', value: presentToday },
+                { label: 'Absent Today', value: absentToday }
             ]
         },
     ];
 
     return (
-        <div className="min-h-screen py-12">
+        <div className="min-h-screen py-16">
             <Container>
-                {/* Hero Section with Intersection Observer */}
+                {/* Hero Section - Clean and Professional */}
                 <motion.div
                     ref={heroRef}
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 30 }}
+                    className="text-center mb-20"
+                    initial={{ opacity: 0, y: 20 }}
                     animate={heroInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
                 >
-                    <motion.h1
-                        className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                    >
+                    <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white">
                         Welcome to HRMS Lite
-                    </motion.h1>
-                    {/* <motion.p
-                        className="text-xl text-gray-400 max-w-3xl mx-auto"
-                        initial={{ opacity: 0 }}
-                        animate={heroInView ? { opacity: 1 } : {}}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                    >
-                        A modern, lightweight Human Resource Management System for efficient employee and attendance management
-                    </motion.p> */}
+                    </h1>
+                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                        Streamline your HR operations with our modern management system
+                    </p>
                 </motion.div>
 
-                {/* Feature Cards with Badges */}
-                <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                {/* Feature Cards - Clean Grid Layout */}
+                <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
                     {features.map((feature, index) => (
                         <motion.div
                             key={feature.title}
                             initial={{ opacity: 0, y: 20 }}
                             animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ duration: 0.5, delay: 0.6 + index * 0.2 }}
-                            onHoverStart={() => setHoveredCard(index)}
-                            onHoverEnd={() => setHoveredCard(null)}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
                             <Link to={feature.link} className="block group">
-                                <motion.div
-                                    className="relative overflow-hidden"
-                                    whileHover={{ y: -8 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    {/* Badge Highlight */}
-                                    <motion.div
-                                        className="absolute top-4 right-4 z-10"
-                                        initial={{ scale: 0, rotate: -180 }}
-                                        animate={featuresInView ? { scale: 1, rotate: 0 } : {}}
-                                        transition={{ duration: 0.5, delay: 0.8 + index * 0.2 }}
-                                    >
-                                        <motion.span
-                                            className={`inline-block px-3 py-1 bg-gradient-to-r ${feature.gradient} text-white text-xs font-bold rounded-full shadow-lg`}
-                                            whileHover={{ scale: 1.1, rotate: 5 }}
-                                        >
-                                            ⭐ {feature.badge}
-                                        </motion.span>
-                                    </motion.div>
+                                <div className="bg-[rgba(26,34,52,0.4)] backdrop-blur-md border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:border-white/20 hover:bg-[rgba(26,34,52,0.6)] hover:shadow-xl hover:shadow-black/20">
+                                    {/* Icon */}
+                                    <div className="text-5xl mb-6">
+                                        {feature.icon}
+                                    </div>
 
-                                    {/* Glowing Border Effect */}
-                                    <motion.div
-                                        className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-2xl opacity-0 blur-xl`}
-                                        animate={{
-                                            opacity: hoveredCard === index ? 0.6 : 0,
-                                        }}
-                                        transition={{ duration: 0.3 }}
-                                    />
+                                    {/* Title */}
+                                    <h3 className="text-2xl font-bold mb-3 text-white">
+                                        {feature.title}
+                                    </h3>
 
-                                    <Card className="relative border-2 border-transparent hover:border-white/20 transition-all duration-300">
-                                        {/* Icon with Scale and Rotation */}
-                                        <motion.div
-                                            className={`text-6xl mb-6 w-24 h-24 rounded-2xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center shadow-lg`}
-                                            animate={{
-                                                scale: hoveredCard === index ? 1.1 : 1,
-                                                rotate: hoveredCard === index ? 5 : 0,
-                                            }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            {feature.icon}
-                                        </motion.div>
+                                    {/* Description */}
+                                    <p className="text-gray-400 mb-6 leading-relaxed">
+                                        {feature.description}
+                                    </p>
 
-                                        <h3 className="text-2xl font-bold mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-[#667eea] group-hover:to-[#764ba2] transition-all duration-300">
-                                            {feature.title}
-                                        </h3>
-
-                                        <p className="text-gray-400 mb-6 leading-relaxed">
-                                            {feature.description}
-                                        </p>
-
-                                        {/* Stats Display */}
-                                        {feature.stats && (
-                                            <div className="flex gap-3 mb-6">
-                                                {feature.stats.map((stat, statIndex) => (
-                                                    <motion.div
-                                                        key={stat.label}
-                                                        className={`flex-1 px-4 py-3 bg-gradient-to-r ${stat.gradient} rounded-lg border border-white/10 backdrop-blur-sm`}
-                                                        initial={{ opacity: 0, scale: 0.8 }}
-                                                        animate={featuresInView ? { opacity: 1, scale: 1 } : {}}
-                                                        transition={{ duration: 0.4, delay: 1 + index * 0.2 + statIndex * 0.1 }}
-                                                        whileHover={{ scale: 1.05 }}
-                                                    >
-                                                        <div className="text-xl font-bold text-white">
-                                                            {loading ? '...' : stat.value}
-                                                        </div>
-                                                        <div className="text-xs text-gray-300">{stat.label}</div>
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {/* Animated Arrow */}
-                                        <div className="flex items-center text-primary font-semibold">
-                                            <span className="mr-2">Get Started</span>
-                                            <motion.span
-                                                className="text-xl"
-                                                animate={{
-                                                    x: hoveredCard === index ? 5 : 0,
-                                                }}
-                                                transition={{ duration: 0.3 }}
+                                    {/* Stats Grid */}
+                                    <div className="grid grid-cols-2 gap-4 mb-6">
+                                        {feature.stats.map((stat, statIndex) => (
+                                            <div
+                                                key={statIndex}
+                                                className="bg-white/5 rounded-lg p-4 border border-white/10"
                                             >
-                                                →
-                                            </motion.span>
-                                        </div>
-                                    </Card>
-                                </motion.div>
+                                                <div className="text-2xl font-bold text-white mb-1">
+                                                    {loading ? '—' : stat.value}
+                                                </div>
+                                                <div className="text-xs text-gray-400 uppercase tracking-wide">
+                                                    {stat.label}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Link */}
+                                    <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
+                                        <span>View Details</span>
+                                        <svg
+                                            className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </Link>
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Footer Info */}
+                <motion.div
+                    className="text-center mt-16"
+                    initial={{ opacity: 0 }}
+                    animate={featuresInView ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                    <p className="text-gray-500 text-sm">
+                        Built for Quess Corp • Modern HR Management
+                    </p>
+                </motion.div>
             </Container>
         </div>
     );
 };
 
 export default Home;
+

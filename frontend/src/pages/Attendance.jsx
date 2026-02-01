@@ -60,19 +60,9 @@ const Attendance = () => {
                     animate={headerInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5 }}
                 >
-                    <motion.div
-                        className="inline-block mb-4"
-                        initial={{ scale: 0 }}
-                        animate={headerInView ? { scale: 1 } : {}}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                    >
-                        {/* <span className="text-6xl">📅</span> */}
-                    </motion.div>
-
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#4facfe] via-[#00f2fe] to-[#43e97b] bg-clip-text text-transparent">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
                         Attendance Management
                     </h1>
-
                     {/* <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                         Track and manage employee attendance records with real-time insights
                     </p> */}
