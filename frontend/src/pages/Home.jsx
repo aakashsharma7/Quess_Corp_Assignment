@@ -80,9 +80,9 @@ const Home = () => {
                     <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white">
                         Welcome to HRMS Lite
                     </h1>
-                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                    {/* <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                         Streamline your HR operations with our modern management system
-                    </p>
+                    </p> */}
                 </motion.div>
 
                 {/* Feature Cards - Clean Grid Layout */}

@@ -59,7 +59,7 @@ const AttendanceRecords = ({ records, loading }) => {
         <Card>
             {/* Header with Filter */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                <h2 className="text-2xl font-bold">📊 Attendance Records</h2>
+                <h2 className="text-2xl font-bold text-white">Attendance Records</h2>
 
                 <div className="flex items-center gap-3">
                     <label className="text-sm font-medium text-gray-400">Filter by Employee:</label>

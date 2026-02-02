@@ -52,7 +52,7 @@ const EmployeeList = ({ employees, loading, onEmployeeDeleted }) => {
 
     return (
         <Card>
-            <h2 className="text-2xl font-bold mb-6">👥 Employee List</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white">Employee List</h2>
             <div className="table-container">
                 <table>
                     <thead>

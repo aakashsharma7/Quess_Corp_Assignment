@@ -69,7 +69,7 @@ const AttendanceForm = ({ onAttendanceMarked }) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
             >
-                <h2 className="text-2xl font-bold mb-6">📝 Mark Attendance</h2>
+                <h2 className="text-2xl font-bold mb-6 text-white">Mark Attendance</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Employee Selection */}
                     <div>
