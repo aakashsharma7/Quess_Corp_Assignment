@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+
 const Header = () => {
     const location = useLocation();
 
@@ -12,9 +13,16 @@ const Header = () => {
 
     return (
         <header className="sticky top-0 z-50 px-6 pt-6">
-            <div className="bg-card/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl">
-                <div className="max-w-7xl mx-auto px-6 py-4">
+            {/* Enhanced Glass Header */}
+            <motion.div
+                className="glass-card-strong !p-0 overflow-hidden"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                <div className="max-w-7xl mx-auto px-6 py-3">
                     <div className="flex items-center justify-between">
+                        {/* Logo/Brand */}
                         <motion.div
                             className="flex items-center gap-3"
                             initial={{ opacity: 0, x: -20 }}
@@ -22,18 +30,19 @@ const Header = () => {
                             transition={{ duration: 0.5 }}
                         >
                             {/* <motion.img
-                                src="/logo.png"
-                                alt="HRMS Lite Logo"
-                                className="h-10 w-10 object-contain"
+                                src={logo}
+                                alt="Quess Corp Logo"
+                                className="h-10 w-auto object-contain"
                                 whileHover={{ scale: 1.1, rotate: 5 }}
                                 transition={{ duration: 0.2 }}
                             /> */}
-                            <h1 className="text-2xl font-bold text-foreground text-center">
-                                QUESS CORP HRMS Lite
+                            <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                                QUESS CORP HRMS
                             </h1>
                         </motion.div>
 
-                        <nav className="flex items-center gap-2">
+                        {/* Navigation */}
+                        <nav className="flex items-center gap-3">
                             {navItems.map((item, index) => {
                                 const isActive = location.pathname === item.path;
 
@@ -50,31 +59,39 @@ const Header = () => {
                                         >
                                             <motion.div
                                                 className={`
-                                                flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm
+                                                flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm
                                                 transition-all duration-300 relative overflow-hidden
                                                 ${isActive
-                                                        ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-[0_4px_15px_rgba(80,80,80,0.4)]'
-                                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-[0_4px_20px_rgba(59,130,246,0.4)]'
+                                                        : 'text-gray-400 hover:text-white bg-white/5 hover:bg-white/10'
                                                     }
                                             `}
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
+                                                whileHover={{ scale: 1.05, y: -2 }}
+                                                whileTap={{ scale: 0.98 }}
                                             >
-                                                <span>{item.label}</span>
+                                                <span className="relative z-10">{item.label}</span>
 
-                                                {/* Active Indicator */}
+                                                {/* Active Glow Effect */}
                                                 {isActive && (
                                                     <motion.div
-                                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                                                        layoutId="activeTab"
+                                                        className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 blur-xl"
+                                                        layoutId="activeGlow"
                                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                                     />
                                                 )}
 
-                                                {/* Hover Glow Effect */}
+                                                {/* Hover Shimmer Effect */}
                                                 {!isActive && (
                                                     <motion.div
-                                                        className="absolute inset-0 bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                        className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                        animate={{
+                                                            x: ['-100%', '100%'],
+                                                        }}
+                                                        transition={{
+                                                            duration: 2,
+                                                            repeat: Infinity,
+                                                            ease: "linear"
+                                                        }}
                                                     />
                                                 )}
                                             </motion.div>
@@ -85,9 +102,10 @@ const Header = () => {
                         </nav>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </header>
     );
 };
 
 export default Header;
+

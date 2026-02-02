@@ -5,6 +5,8 @@ import Container from '../components/Layout/Container';
 import { useInView } from '../hooks/useInView';
 import { employeeAPI } from '../api/employees';
 import { attendanceAPI } from '../api/attendance';
+import ParticleBackground from '../components/UI/ParticleBackground';
+import GradientMesh from '../components/UI/GradientMesh';
 
 const Home = () => {
     const [heroRef, heroInView] = useInView({ threshold: 0.2, once: true });
@@ -67,12 +69,18 @@ const Home = () => {
     ];
 
     return (
-        <div className="min-h-screen py-16">
+        <div className="min-h-screen py-16 relative">
+            {/* Gradient Mesh Background */}
+            <GradientMesh />
+
+            {/* Particle Background */}
+            <ParticleBackground particleCount={40} />
+
             <Container>
                 {/* Hero Section - Clean and Professional */}
                 <motion.div
                     ref={heroRef}
-                    className="text-center mb-20"
+                    className="text-center mb-20 relative z-10"
                     initial={{ opacity: 0, y: 20 }}
                     animate={heroInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
@@ -80,13 +88,10 @@ const Home = () => {
                     <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white">
                         Welcome to HRMS Lite
                     </h1>
-                    {/* <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                        Streamline your HR operations with our modern management system
-                    </p> */}
                 </motion.div>
 
-                {/* Feature Cards - Clean Grid Layout */}
-                <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                {/* Feature Cards - Enhanced Glassmorphism */}
+                <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto relative z-10">
                     {features.map((feature, index) => (
                         <motion.div
                             key={feature.title}
@@ -95,12 +100,8 @@ const Home = () => {
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
                             <Link to={feature.link} className="block group">
-                                <div className="bg-[rgba(26,34,52,0.4)] backdrop-blur-md border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:border-white/20 hover:bg-[rgba(26,34,52,0.6)] hover:shadow-xl hover:shadow-black/20">
-                                    {/* Icon */}
-                                    <div className="text-5xl mb-6">
-                                        {feature.icon}
-                                    </div>
-
+                                {/* Enhanced Glass Card with Border Glow */}
+                                <div className="glass-card-strong group-hover:scale-[1.02] transition-transform duration-500">
                                     {/* Title */}
                                     <h3 className="text-2xl font-bold mb-3 text-white">
                                         {feature.title}
@@ -111,24 +112,26 @@ const Home = () => {
                                         {feature.description}
                                     </p>
 
-                                    {/* Stats Grid */}
+                                    {/* Neumorphism Stats Grid */}
                                     <div className="grid grid-cols-2 gap-4 mb-6">
                                         {feature.stats.map((stat, statIndex) => (
-                                            <div
+                                            <motion.div
                                                 key={statIndex}
-                                                className="bg-white/5 rounded-lg p-4 border border-white/10"
+                                                className="neuro-card-pressed"
+                                                whileHover={{ scale: 1.05 }}
+                                                transition={{ duration: 0.2 }}
                                             >
-                                                <div className="text-2xl font-bold text-white mb-1">
+                                                <div className="text-2xl font-bold text-white mb-1 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                                     {loading ? '—' : stat.value}
                                                 </div>
                                                 <div className="text-xs text-gray-400 uppercase tracking-wide">
                                                     {stat.label}
                                                 </div>
-                                            </div>
+                                            </motion.div>
                                         ))}
                                     </div>
 
-                                    {/* Action Link */}
+                                    {/* Action Link with Glow Effect */}
                                     <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
                                         <span>View Details</span>
                                         <svg
@@ -148,7 +151,7 @@ const Home = () => {
 
                 {/* Footer Info */}
                 <motion.div
-                    className="text-center mt-16"
+                    className="text-center mt-16 relative z-10"
                     initial={{ opacity: 0 }}
                     animate={featuresInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.6, delay: 0.4 }}
